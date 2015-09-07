@@ -356,7 +356,7 @@ LIMIT 100;
 					<section>
 						<h2>Index On Expressions</h2>
 						<p>Can't remove UPPER.</p>
-						<p>But you can do you can do indexes on functions in Postgres.</p>
+						<p>But you can do indexes on functions in Postgres.</p>
 						<p>Even better, you can do <a href="http://www.postgresql.org/docs/9.3/static/indexes-expressional.html" target="_blank">index on any expression</a>.</p>
 					</section>
 
@@ -548,30 +548,27 @@ FOR EACH ROW EXECUTE PROCEDURE trg_tracking_impression_partition();
 					</section>
 
 					<section>
-						<h2>Migrate The Data</h2>
+						<h2>The Data And The Speed</h2>
 						<pre><code>
 INSERT INTO
 tracking_impression(user_id, "when", content_type_id, object_id, ..)
 SELECT user_id, "when", content_type_id, object_id, ..
 FROM  tracking_impression_np;
 						</code></pre>
-						<p>The speed</p>
 						<pre><code>
 -- old non partitioned table
 => SELECT "tracking_impression".*
 FROM "tracking_impression_np"
 WHERE ("tracking_impression_np"."when"
 BETWEEN '2014-09-05 00:00:00-07:00'
-AND '2014-10-04 00:00:00-07:00'
-AND ...;
+AND '2014-10-04 00:00:00-07:00' AND ...;
 Time: 2983993.619 ms
 -- new partitioned table
 => SELECT "tracking_impression".*
 FROM "tracking_impression"
 WHERE ("tracking_impression"."when"
 BETWEEN '2014-09-05 00:00:00-07:00'
-AND '2014-10-04 00:00:00-07:00'
-AND ...;
+AND '2014-10-04 00:00:00-07:00' AND ...;
 Time: 263.702 ms
 						</code></pre>
 					</section>
@@ -639,8 +636,8 @@ Out[7]: [&lt;Model: A&gt;, &lt;Model: B&gt;, &lt;Model: B&gt;, &lt;Model: C&gt;,
 						<p>Annotate on min due_date.</p>
 						<pre><code>
 In [7]: Model.objects.all()\
-                     .annotate(Min('crmopportunityevent__due_date'))\
-                     .order_by('crmopportunityevent__due_date__min').distinct()
+                     .annotate(Min('modelevent__due_date'))\
+                     .order_by('modelevent__due_date__min').distinct()
 Out[7]: [&lt;Model: A&gt;, &lt;Model: B&gt;, &lt;Model: C&gt;, ...
 						</code></pre>
 						<p>That solved the duplicates.</p>
