@@ -100,7 +100,7 @@
 				<section>
 					<section>
 						<h2>Unexpected results</h2>
-						<p>At VuMedi, he have users in various groups.</p>
+						<p>At VuMedi, we have users in various groups.</p>
 						<p>Most interesting for us are 2 surgeon groups: <ul><li>Surgeon</li><li>Flagged</small></li></ul></p>
 						<p>How many surgeons do we have?</p>
 					</section>
@@ -117,10 +117,9 @@
 						<p>Hey BB, are you sure? That seems a bit too much.</p>
 						<p>- Off course I'm sure, but OK, to check, I'll write the same thing using Qs.</p>
 						<pre><code data-trim contenteditable>
-User.objects.filter(groups__name__in=[Q(groups=self.surgeon) |
-                                      Q(groups=self.flagged)])\
-            .count()
-						</code></pre>
+User.objects.filter(Q(groups__name='Surgeon') | \
+                    Q(groups__name='Flagged')).count()
+                    </code></pre>
 						<p>One meeelion again!</p>
 					</section>
 					<section>
@@ -337,9 +336,9 @@ def construct_search(field_name):
 					</section>
 
 					<section>
-						<h2>SQL Produced</h2>
+						<h2>SQL DEBUGGING</h2>
 						<pre><code>
-SELECT "myapp_mymodel"."id”, "myapp_mymodel"."mdn”, ...
+SELECT "myapp_mymodel"."id", "myapp_mymodel"."mdn”, ...
 FROM "myapp_mymodel"
 WHERE UPPER("myapp_mymodel"."mdn"::text) = UPPER(‘1234567890’)
 LIMIT 100;
