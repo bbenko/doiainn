@@ -93,7 +93,7 @@
 					<ul>
 						<li>Unexpected results</li>
 						<li>Slow execution</li>
-						<li>Not supported by ORM</li>
+						<li>Some things not supported</li>
 					</ul>
 				</section>
 
@@ -603,7 +603,7 @@ class Impression(models.Model):
 
 				<section>
 					<section>
-						<h2>Not supported by ORM</h2>
+						<h2>Some Things Not Supported</h2>
 						<p>Hey BB, there are duplicates when I sort in model's admin</p>
 						<p>by due_date field from not closed event.</p>
 						<img src="img/be-great.jpg" />
@@ -627,8 +627,18 @@ In [7]: Model.objects.all()\
 Out[7]: [&lt;Model: A&gt;, &lt;Model: B&gt;, &lt;Model: B&gt;, &lt;Model: C&gt;, ...
 						</code></pre>
 						<p>2 events for model B --> model B twice in queryset.</p>
-						<p>Not even distinct helps.</p>
 					</section>
+                    <section>
+                        <h2>Not even distinct helps</h2>
+                        <pre><code>
+SELECT DISTINCT "model"."id",
+                ...,
+                "modelevent"."due_date"
+FROM "model"
+LEFT OUTER JOIN "modelevent" ON ("model"."id" = "modelevent"."model_id")
+ORDER BY "modelevent"."due_date" ASC
+                        </code></pre>
+                    </section>
 
 					<section>
 						<h2>Take Only The First Event</h2>
@@ -636,7 +646,8 @@ Out[7]: [&lt;Model: A&gt;, &lt;Model: B&gt;, &lt;Model: B&gt;, &lt;Model: C&gt;,
 						<pre><code>
 In [7]: Model.objects.all()\
                      .annotate(Min('modelevent__due_date'))\
-                     .order_by('modelevent__due_date__min').distinct()
+                     .order_by('modelevent__due_date__min')\
+                     .distinct()
 Out[7]: [&lt;Model: A&gt;, &lt;Model: B&gt;, &lt;Model: C&gt;, ...
 						</code></pre>
 						<p>That solved the duplicates.</p>
@@ -653,6 +664,9 @@ Model.objects.all().extra(select={'modelevent__due_date__min':
                                AND closed=false"""})
 						</code></pre>
 					</section>
+                    <section>
+                        <img src="img/enough.jpg" />
+                    </section>
 				</section>
 
 				<section>
